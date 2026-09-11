@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-create-apartment
+      author: kirill
+      changes:
+        - createTable:
+            tableName: apartment
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: apartment_number
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: room_count
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cleaning_date
+                  type: date
+              - column:
+                  name: category_id
+                  type: bigint
+        - addForeignKeyConstraint:
+            constraintName: fk_apartment_category
+            baseTableName: apartment
+            baseColumnNames: category_id
+            referencedTableName: category
+            referencedColumnNames: id
