@@ -13,15 +13,15 @@ import jakarta.persistence.Table
 @Table(name = "category")
 class Category(
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    var id: Long? = null,
+
     @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false, unique = true, length = 50)
     var name: CategoryName,
 
     @Column(name = "description", length = 255)
     var description: String? = null,
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    var id: Long? = null
 )
