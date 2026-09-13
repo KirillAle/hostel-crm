@@ -42,9 +42,9 @@ class ApartmentController(private val apartmentService: ApartmentService) {
     fun getRoomCount(@PathVariable id: Long): Int = apartmentService.getRoomCount(id)
 
     @PutMapping("/{apartmentId}/category/{categoryId}")
-    fun setCategory(
+    fun assignCategory(
         @PathVariable apartmentId: Long,
         @PathVariable categoryId: Long,
-    ): ApartmentResponse = ApartmentResponse.from(apartmentService.setCategory(apartmentId, categoryId))
+    ): ApartmentResponse = ApartmentResponse.from(apartmentService.assignCategory(apartmentId, categoryId))
 
 }

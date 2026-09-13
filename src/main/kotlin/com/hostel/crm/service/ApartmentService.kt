@@ -42,7 +42,7 @@ class ApartmentService(
     }
 
     @Transactional
-    fun setCategory(apartmentId: Long, categoryId: Long): Apartment {
+    fun assignCategory(apartmentId: Long, categoryId: Long): Apartment {
         val apartment = apartmentRepository.findByIdOrNull(apartmentId)
             ?: throw EntityNotFoundException("Apartment $apartmentId not found")
         val category = categoryRepository.findByIdOrNull(categoryId)
