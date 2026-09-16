@@ -18,4 +18,9 @@ class GlobalExceptionHandler {
     fun handleAlreadyExist(exception: EntityAlreadyExistException) =
         ErrorResponse(exception.message)
 
+    @ExceptionHandler(UnauthorizedException::class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    fun handleUnauthorized(exception: UnauthorizedException) =
+        ErrorResponse(exception.message)
+
 }
