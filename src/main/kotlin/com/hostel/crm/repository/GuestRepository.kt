@@ -15,4 +15,6 @@ interface GuestRepository : JpaRepository<Guest, Long> {
 
     @EntityGraph(attributePaths = ["apartment"])
     fun findAllByApartmentId(apartmentId: Long): List<Guest>
+
+    fun existsByApartmentId(apartmentId: Long): Boolean
 }

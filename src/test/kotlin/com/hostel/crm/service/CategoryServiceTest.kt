@@ -18,6 +18,8 @@ class CategoryServiceTest {
 
     @field:Autowired
     lateinit var categoryService: CategoryService
+    @field:Autowired
+    lateinit var apartmentService: ApartmentService
 
     @Test
     fun `create saves category`() {
@@ -51,5 +53,15 @@ class CategoryServiceTest {
         val all = categoryService.findAll()
 
         assertTrue(all.any { it.name == CategoryName.BUSINESS })
+    }
+
+    @Test
+    fun `delete category in use throws`() {
+        val category = categoryService.create(CategoryName.DELUXE, "Deluxe")
+        val apartment = apartmentService.create("201", 2, null)
+        apartmentService.assignCategory(apartment.id!!, category.id!!)
+        assertFailsWith<EntityAlreadyExistException> {
+            categoryService.delete(category.id!!)
+        }
     }
 }
