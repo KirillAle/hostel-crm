@@ -4,13 +4,17 @@ import com.hostel.crm.entity.Category
 import com.hostel.crm.entity.CategoryName
 import com.hostel.crm.exception.EntityAlreadyExistException
 import com.hostel.crm.exception.EntityNotFoundException
+import com.hostel.crm.repository.ApartmentRepository
 import com.hostel.crm.repository.CategoryRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional(readOnly = true)
-class CategoryService(private val categoryRepository: CategoryRepository) {
+class CategoryService(
+    private val categoryRepository: CategoryRepository,
+    private val apartmentRepository: ApartmentRepository
+) {
     fun findAll(): List<Category> = categoryRepository.findAll()
 
     @Transactional
@@ -25,6 +29,9 @@ class CategoryService(private val categoryRepository: CategoryRepository) {
     fun delete(id: Long) {
         if (!categoryRepository.existsById(id)) {
             throw EntityNotFoundException("Category $id not found")
+        }
+        if (apartmentRepository.existsByCategoryId(id)) {
+            throw EntityAlreadyExistException("Category $id is in use")
         }
         categoryRepository.deleteById(id)
     }

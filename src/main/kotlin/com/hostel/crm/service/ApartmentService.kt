@@ -5,6 +5,7 @@ import com.hostel.crm.exception.EntityAlreadyExistException
 import com.hostel.crm.exception.EntityNotFoundException
 import com.hostel.crm.repository.ApartmentRepository
 import com.hostel.crm.repository.CategoryRepository
+import com.hostel.crm.repository.GuestRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.stereotype.Service
@@ -15,7 +16,8 @@ import java.time.LocalDate
 @Transactional(readOnly = true)
 class ApartmentService(
     private val apartmentRepository: ApartmentRepository,
-    private val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
+    private val guestRepository: GuestRepository
 ) {
     fun findAll(): List<Apartment> = apartmentRepository.findAll()
 
@@ -38,7 +40,10 @@ class ApartmentService(
         if (!apartmentRepository.existsById(id)) {
             throw EntityNotFoundException("Apartment $id not found")
         }
-        apartmentRepository.deleteById(id)
+        if (guestRepository.existsByApartmentId(id)) {
+            throw EntityAlreadyExistException("Apartment $id is already in use")
+        }
+            apartmentRepository.deleteById(id)
     }
 
     @Transactional

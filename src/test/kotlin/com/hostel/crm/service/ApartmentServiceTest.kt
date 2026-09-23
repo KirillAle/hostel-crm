@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
+import java.time.LocalDate
 
 @SpringBootTest
 @Transactional
@@ -17,9 +18,11 @@ class ApartmentServiceTest {
 
     @field:Autowired
     lateinit var apartmentService: ApartmentService
-
     @field:Autowired
     lateinit var categoryService: CategoryService
+
+    @field:Autowired
+    lateinit var guestService: GuestService
 
     @Test
     fun `create saves apartment`() {
@@ -85,6 +88,24 @@ class ApartmentServiceTest {
 
         assertFailsWith<EntityNotFoundException> {
             apartmentService.assignCategory(apartment.id!!, 999L)
+        }
+    }
+
+    @Test
+    fun `delete apartment in use throws`() {
+        val apartment = apartmentService.create("201", 2, null)
+        guestService.create(
+            "Ivan Ivanov",
+            "1111",
+            null,
+            LocalDate.of(1990, 5, 12),
+            null,
+            null
+        ).let { guest ->
+            guestService.assignApartment(guest.id!!, apartment.id!!)
+        }
+        assertFailsWith<EntityAlreadyExistException> {
+            apartmentService.delete(apartment.id!!)
         }
     }
 }

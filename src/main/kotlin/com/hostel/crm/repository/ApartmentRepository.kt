@@ -8,4 +8,6 @@ interface ApartmentRepository : JpaRepository<Apartment, Long> {
     @EntityGraph(attributePaths = ["category"])
     override fun findAll(): List<Apartment>
     fun existsByApartmentNumber(apartmentNumber: String): Boolean
+
+    fun existsByCategoryId(categoryId: Long): Boolean
 }
